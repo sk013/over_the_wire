@@ -151,23 +151,3 @@ level 15-->level 16
 cat /etc/bandit_pass/bandit15 | openssl s_client -connect localhost:30001 -ign_eof
 cluFn7wTiGryunymYOu4RcffSxQluehd
 ________________________________
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-lev 24 The password is UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ
